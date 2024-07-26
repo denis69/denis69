@@ -63,10 +63,23 @@
         .star {
             color: #FFD700;
         }
+        #shareButton {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
-    <h1 class="logo">RECIPETTE</h1>
+    <h1 id="recipette" class="logo">RECIPETTE</h1>
     <p class="tagline">Enjoy 1 new recipe everyday</p>
     <div id="recipe-container">
         <h2 id="recipe-title"></h2>
@@ -82,6 +95,7 @@
         </div>
         <div id="ingredients"></div>
         <div id="instructions"></div>
+        <button id="shareButton">Share Recipe</button>
     </div>
 
     <script type="module">
@@ -106,7 +120,6 @@
             document.getElementById('recipe-title').textContent = recipe.name;
             document.getElementById('recipe-image').src = recipe.imageURL;
             
-            // New meta information
             document.getElementById('author').textContent = `Author: ${recipe.author || 'Unknown'}`;
             document.getElementById('rating').innerHTML = `Rating: ${getStarRating(recipe.rating || 0)}`;
             document.getElementById('prep-time').textContent = `Prep Time: ${recipe.prepTime} minutes`;
@@ -128,6 +141,8 @@
             instructionsList.innerHTML = '<h3>Instructions:</h3><ol>' + 
                 recipe.instructions.map(item => `<li>${item}</li>`).join('') + 
                 '</ol>';
+
+            window.currentRecipe = recipe;
         }
 
         function getStarRating(rating) {
@@ -197,6 +212,46 @@
                 console.error("Error fetching recipe:", error);
             }
         }
+
+        // Social sharing functionality
+        function getRecipeNumber() {
+            const startDate = new Date('2024-07-26'); // The start date of your app
+            const today = new Date();
+            const diffTime = Math.abs(today - startDate);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+            return diffDays;
+        }
+
+        function generateShareText(recipe) {
+            const recipeNumber = getRecipeNumber();
+            const rating = recipe.rating.toFixed(1);
+            const emojis = '🥞🧇🍣🍛🍡🥮🍙';
+            return `Recipette ${recipeNumber} - ${rating} ⭐'s\n${emojis}`;
+        }
+
+        async function shareRecipe(recipe) {
+            const shareText = generateShareText(recipe);
+            const shareUrl = window.location.href;
+
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: recipe.name,
+                        text: shareText,
+                        url: shareUrl,
+                    });
+                } catch (err) {
+                    console.error('Error sharing:', err);
+                }
+            } else {
+                // Fallback for browsers that don't support Web Share API
+                alert('Sharing is not supported on this browser. You can copy this text:\n\n' + shareText + '\n' + shareUrl);
+            }
+        }
+
+        document.getElementById('shareButton').addEventListener('click', () => {
+            shareRecipe(window.currentRecipe);
+        });
 
         // Call this function when the page loads
         fetchAndDisplayRecipe();
