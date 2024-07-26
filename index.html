@@ -226,26 +226,24 @@
             const recipeNumber = getRecipeNumber();
             const rating = recipe.rating.toFixed(1);
             const emojis = '🥞🧇🍣🍛🍡🥮🍙';
-            return `Recipette ${recipeNumber} - ${rating} ⭐'s\n${emojis}`;
+            return `Recipette ${recipeNumber} - ${rating} ⭐'s\n\n${emojis}`;
         }
 
         async function shareRecipe(recipe) {
             const shareText = generateShareText(recipe);
-            const shareUrl = window.location.href;
 
             if (navigator.share) {
                 try {
                     await navigator.share({
                         title: recipe.name,
                         text: shareText,
-                        url: shareUrl,
                     });
                 } catch (err) {
                     console.error('Error sharing:', err);
                 }
             } else {
                 // Fallback for browsers that don't support Web Share API
-                alert('Sharing is not supported on this browser. You can copy this text:\n\n' + shareText + '\n' + shareUrl);
+                alert('Sharing is not supported on this browser. You can copy this text:\n\n' + shareText);
             }
         }
 
