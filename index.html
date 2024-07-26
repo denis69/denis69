@@ -44,31 +44,22 @@
     </div>
 
     <script type="module">
-        // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-analytics.js";
-        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-database.js";
+        import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-database.js";
 
-        // Your web app's Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyA71FrziQE6ezcRV5Vz72pQrKbrmwIgM50",
             authDomain: "recipette-6e937.firebaseapp.com",
             projectId: "recipette-6e937",
+            databaseURL: "https://recipette-6e937-default-rtdb.firebaseio.com",
             storageBucket: "recipette-6e937.appspot.com",
             messagingSenderId: "338983932813",
             appId: "1:338983932813:web:8c3c912e4911c9624523c4",
             measurementId: "G-9BV3VLB1Z9"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
         const db = getDatabase(app);
-
-        function getRandomRecipeKey(recipes) {
-            const recipeKeys = Object.keys(recipes);
-            return recipeKeys[Math.floor(Math.random() * recipeKeys.length)];
-        }
 
         function displayRecipe(recipe) {
             document.getElementById('recipe-title').textContent = recipe.name;
@@ -85,48 +76,68 @@
                 '</ol>';
         }
 
-        function getDailyRecipe() {
-            const today = new Date().toDateString();
-            const storedDate = localStorage.getItem('lastRecipeDate');
-            const storedRecipeKey = localStorage.getItem('currentRecipeKey');
+        function getRandomRecipeKey(recipes) {
+            const recipeKeys = Object.keys(recipes);
+            return recipeKeys[Math.floor(Math.random() * recipeKeys.length)];
+        }
 
-            if (storedDate === today && storedRecipeKey) {
-                // If we have a stored recipe for today, use it
-                fetchAndDisplayRecipe(storedRecipeKey);
-            } else {
-                // If it's a new day or we don't have a stored recipe, get a new one
-                const recipesRef = ref(db, 'recipes');
-                get(recipesRef).then((snapshot) => {
-                    if (snapshot.exists()) {
-                        const recipes = snapshot.val();
-                        const newRecipeKey = getRandomRecipeKey(recipes);
-                        localStorage.setItem('currentRecipeKey', newRecipeKey);
-                        localStorage.setItem('lastRecipeDate', today);
-                        fetchAndDisplayRecipe(newRecipeKey);
-                    } else {
-                        console.log("No recipes available");
-                    }
-                }).catch((error) => {
-                    console.error("Error fetching recipes:", error);
+        async function setDailyRecipe() {
+            const recipesRef = ref(db, 'recipes');
+            const snapshot = await get(recipesRef);
+            
+            if (snapshot.exists()) {
+                const recipes = snapshot.val();
+                const newRecipeKey = getRandomRecipeKey(recipes);
+                const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+                
+                await set(ref(db, 'dailyRecipe'), {
+                    date: today,
+                    recipeKey: newRecipeKey
                 });
+                
+                return newRecipeKey;
+            } else {
+                console.log("No recipes available");
+                return null;
             }
         }
 
-        function fetchAndDisplayRecipe(recipeKey) {
-            const recipeRef = ref(db, `recipes/${recipeKey}`);
-            get(recipeRef).then((snapshot) => {
-                if (snapshot.exists()) {
-                    displayRecipe(snapshot.val());
-                } else {
-                    console.log("Recipe not found");
+        async function getDailyRecipe() {
+            const dailyRecipeRef = ref(db, 'dailyRecipe');
+            const snapshot = await get(dailyRecipeRef);
+            
+            if (snapshot.exists()) {
+                const dailyRecipe = snapshot.val();
+                const today = new Date().toISOString().split('T')[0];
+                
+                if (dailyRecipe.date === today) {
+                    return dailyRecipe.recipeKey;
                 }
-            }).catch((error) => {
+            }
+            
+            return await setDailyRecipe();
+        }
+
+        async function fetchAndDisplayRecipe() {
+            try {
+                const recipeKey = await getDailyRecipe();
+                if (recipeKey) {
+                    const recipeRef = ref(db, `recipes/${recipeKey}`);
+                    const snapshot = await get(recipeRef);
+                    
+                    if (snapshot.exists()) {
+                        displayRecipe(snapshot.val());
+                    } else {
+                        console.log("Recipe not found");
+                    }
+                }
+            } catch (error) {
                 console.error("Error fetching recipe:", error);
-            });
+            }
         }
 
         // Call this function when the page loads
-        getDailyRecipe();
+        fetchAndDisplayRecipe();
     </script>
 </body>
 </html>
