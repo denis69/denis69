@@ -14,9 +14,8 @@
             padding: 20px;
             background-color: #f4f4f4;
         }
-        h1 {
+        h1, h2 {
             color: #2c3e50;
-            text-align: center;
         }
         #recipe-container {
             background-color: white;
@@ -33,51 +32,67 @@
         #ingredients, #instructions {
             margin-bottom: 20px;
         }
-        #date {
-            text-align: center;
+        .recipe-meta {
             font-style: italic;
-            margin-bottom: 20px;
+            color: #7f8c8d;
         }
     </style>
 </head>
 <body>
     <h1>Daily Recipe Showcase</h1>
-    <div id="date"></div>
     <div id="recipe-container">
-        <img id="recipe-image" src="/api/placeholder/800/400" alt="Recipe of the day">
         <h2 id="recipe-title"></h2>
+        <img id="recipe-image" alt="Recipe of the day">
         <div id="ingredients"></div>
         <div id="instructions"></div>
+        <p id="prep-time" class="recipe-meta"></p>
+        <p id="cook-time" class="recipe-meta"></p>
+        <p id="servings" class="recipe-meta"></p>
+        <p id="difficulty" class="recipe-meta"></p>
+        <p id="cuisine" class="recipe-meta"></p>
     </div>
 
-    <script>
-        // Sample recipe data (in a real application, this would be fetched from a server)
-        const recipes = [
-            {
-                title: "Spaghetti Carbonara",
-                ingredients: [
-                    "400g spaghetti",
-                    "200g pancetta",
-                    "4 large eggs",
-                    "100g Parmesan cheese, grated",
-                    "Freshly ground black pepper"
-                ],
-                instructions: [
-                    "Cook spaghetti according to package instructions.",
-                    "While pasta cooks, fry pancetta until crispy.",
-                    "In a bowl, whisk eggs, cheese, and pepper.",
-                    "Drain pasta, reserving some cooking water.",
-                    "Quickly toss hot pasta with egg mixture and pancetta.",
-                    "Add cooking water if needed for creaminess.",
-                    "Serve immediately with extra cheese and pepper."
-                ]
-            },
-            // Add more recipes here
-        ];
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-analytics.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-database.js";
 
-        function displayRecipe() {
-            const recipe = recipes[0]; // In a real app, you'd select a recipe based on the date
-            document.getElementById('recipe-title').textContent = recipe.title;
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyA71FrziQE6ezcRV5Vz72pQrKbrmwIgM50",
+            authDomain: "recipette-6e937.firebaseapp.com",
+            projectId: "recipette-6e937",
+            storageBucket: "recipette-6e937.appspot.com",
+            messagingSenderId: "338983932813",
+            appId: "1:338983932813:web:8c3c912e4911c9624523c4",
+            measurementId: "G-9BV3VLB1Z9"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getDatabase(app);
+
+        function getRandomRecipe() {
+            const recipesRef = ref(db, 'recipes');
+            get(recipesRef).then((snapshot) => {
+                if (snapshot.exists()) {
+                    const recipes = snapshot.val();
+                    const recipeKeys = Object.keys(recipes);
+                    const randomKey = recipeKeys[Math.floor(Math.random() * recipeKeys.length)];
+                    displayRecipe(recipes[randomKey]);
+                } else {
+                    console.log("No data available");
+                }
+            }).catch((error) => {
+                console.error(error);
+            });
+        }
+
+        function displayRecipe(recipe) {
+            document.getElementById('recipe-title').textContent = recipe.name;
+            document.getElementById('recipe-image').src = recipe.imageURL;
             
             const ingredientsList = document.getElementById('ingredients');
             ingredientsList.innerHTML = '<h3>Ingredients:</h3><ul>' + 
@@ -88,11 +103,30 @@
             instructionsList.innerHTML = '<h3>Instructions:</h3><ol>' + 
                 recipe.instructions.map(item => `<li>${item}</li>`).join('') + 
                 '</ol>';
-
-            document.getElementById('date').textContent = new Date().toDateString();
+            
+            document.getElementById('prep-time').textContent = `Prep Time: ${recipe.prepTime} minutes`;
+            document.getElementById('cook-time').textContent = `Cook Time: ${recipe.cookTime} minutes`;
+            document.getElementById('servings').textContent = `Servings: ${recipe.servings}`;
+            document.getElementById('difficulty').textContent = `Difficulty: ${recipe.difficulty}`;
+            document.getElementById('cuisine').textContent = `Cuisine: ${recipe.cuisine}`;
         }
 
-        displayRecipe();
+        function getDailyRecipe() {
+            const lastUpdate = localStorage.getItem('lastRecipeUpdate');
+            const now = new Date().getTime();
+            
+            if (!lastUpdate || now - lastUpdate > 24 * 60 * 60 * 1000) {
+                getRandomRecipe();
+                localStorage.setItem('lastRecipeUpdate', now);
+            } else {
+                // For simplicity, we're still getting a random recipe
+                // In a more advanced version, you'd store the recipe key and fetch the same recipe
+                getRandomRecipe();
+            }
+        }
+
+        // Call this function when the page loads
+        getDailyRecipe();
     </script>
 </body>
 </html>
