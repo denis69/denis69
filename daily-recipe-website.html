@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Recipe Showcase</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        #recipe-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        #recipe-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        #ingredients, #instructions {
+            margin-bottom: 20px;
+        }
+        #date {
+            text-align: center;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Daily Recipe Showcase</h1>
+    <div id="date"></div>
+    <div id="recipe-container">
+        <img id="recipe-image" src="/api/placeholder/800/400" alt="Recipe of the day">
+        <h2 id="recipe-title"></h2>
+        <div id="ingredients"></div>
+        <div id="instructions"></div>
+    </div>
+
+    <script>
+        // Sample recipe data (in a real application, this would be fetched from a server)
+        const recipes = [
+            {
+                title: "Spaghetti Carbonara",
+                ingredients: [
+                    "400g spaghetti",
+                    "200g pancetta",
+                    "4 large eggs",
+                    "100g Parmesan cheese, grated",
+                    "Freshly ground black pepper"
+                ],
+                instructions: [
+                    "Cook spaghetti according to package instructions.",
+                    "While pasta cooks, fry pancetta until crispy.",
+                    "In a bowl, whisk eggs, cheese, and pepper.",
+                    "Drain pasta, reserving some cooking water.",
+                    "Quickly toss hot pasta with egg mixture and pancetta.",
+                    "Add cooking water if needed for creaminess.",
+                    "Serve immediately with extra cheese and pepper."
+                ]
+            },
+            // Add more recipes here
+        ];
+
+        function displayRecipe() {
+            const recipe = recipes[0]; // In a real app, you'd select a recipe based on the date
+            document.getElementById('recipe-title').textContent = recipe.title;
+            
+            const ingredientsList = document.getElementById('ingredients');
+            ingredientsList.innerHTML = '<h3>Ingredients:</h3><ul>' + 
+                recipe.ingredients.map(item => `<li>${item}</li>`).join('') + 
+                '</ul>';
+            
+            const instructionsList = document.getElementById('instructions');
+            instructionsList.innerHTML = '<h3>Instructions:</h3><ol>' + 
+                recipe.instructions.map(item => `<li>${item}</li>`).join('') + 
+                '</ol>';
+
+            document.getElementById('date').textContent = new Date().toDateString();
+        }
+
+        displayRecipe();
+    </script>
+</body>
+</html>
