@@ -13,9 +13,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RECIPETTE</title>
+    <!-- Add Google Fonts import for Figtree -->
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;800&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Figtree', sans-serif;
             line-height: 1.6;
             color: #333;
             max-width: 800px;
@@ -25,13 +27,14 @@
         }
         .logo {
             font-size: 2.5em;
-            font-weight: bold;
+            font-weight: 800; /* ExtraBold for RECIPETTE */
             text-align: center;
             margin-bottom: 0;
         }
         .tagline {
             text-align: center;
             font-style: italic;
+            font-weight: 300; /* Light for the tagline */
             margin-bottom: 20px;
         }
         #recipe-container {
@@ -51,6 +54,7 @@
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 20px;
+            font-weight: 300; /* Light for meta information */
         }
         .recipe-meta p {
             margin: 5px 0;
@@ -84,6 +88,10 @@
             margin: 4px 2px;
             cursor: pointer;
             border-radius: 4px;
+            font-weight: 500; /* Medium for buttons */
+        }
+        h2, h3 {
+            font-weight: 600; /* Semi-bold for headers */
         }
     </style>
 </head>
