@@ -137,7 +137,14 @@
             document.getElementById('recipe-title').textContent = recipe.name;
             document.getElementById('recipe-image').src = recipe.imageURL;
             
-            document.getElementById('author').textContent = `Author: ${recipe.author || 'Unknown'}`;
+            // Update the author display to include a hyperlink if authorWebsite is available
+            const authorElement = document.getElementById('author');
+            if (recipe.authorWebsite) {
+                authorElement.innerHTML = `Author: <a href="${recipe.authorWebsite}" target="_blank" rel="noopener noreferrer">${recipe.author || 'Unknown'}</a>`;
+            } else {
+                authorElement.textContent = `Author: ${recipe.author || 'Unknown'}`;
+            }
+            
             document.getElementById('rating').innerHTML = `Rating: ${getStarRating(recipe.rating || 0)}`;
             document.getElementById('prep-time').textContent = `Prep Time: ${recipe.prepTime} minutes`;
             document.getElementById('cook-time').textContent = `Cook Time: ${recipe.cookTime} minutes`;
