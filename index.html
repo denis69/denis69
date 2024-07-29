@@ -137,26 +137,6 @@
                 width: 100%;
             }
         }
-
-        /* New styles for the share button */
-        #shareButton {
-            padding: 12px 24px;
-            font-size: 16px;
-            cursor: pointer;
-            border: 1px solid #000;
-            background-color: #000;
-            color: #fff;
-            border-radius: 20px;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            transition: background-color 0.3s, color 0.3s;
-            font-family: 'Figtree', sans-serif;
-            margin-top: 20px;
-        }
-        #shareButton:hover {
-            background-color: #333;
-        }
     </style>
     <!-- Move non-critical styles to an external stylesheet -->
     <link rel="stylesheet" href="styles.css" media="print" onload="this.media='all'">
@@ -357,3 +337,24 @@
             } else {
                 alert('Sharing is not supported on this browser. You can copy this text:\n\n' + shareText);
             }
+        }
+
+        document.getElementById('shareButton').addEventListener('click', () => {
+            shareRecipe(window.currentRecipe);
+        });
+
+        fetchAndDisplayRecipe();
+
+        window.toggleIngredient = function(checkbox) {
+            const span = checkbox.nextElementSibling;
+            span.classList.toggle('checked', checkbox.checked);
+        };
+
+        // Splash page function
+        window.hideSplash = function() {
+            document.getElementById('splash').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+        };
+    </script>
+</body>
+</html
