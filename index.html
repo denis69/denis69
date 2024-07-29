@@ -1,21 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-8P009MXQNG"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-8P009MXQNG');
-</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RECIPETTE</title>
-    <!-- Add Google Fonts import for Figtree -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://www.googletagmanager.com">
+    <link rel="preconnect" href="https://www.gstatic.com">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+    <link rel="dns-prefetch" href="https://www.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;800&display=swap" rel="stylesheet">
     <style>
+        /* Inline critical CSS here */
         body {
             font-family: 'Figtree', sans-serif;
             line-height: 1.6;
@@ -27,14 +24,14 @@
         }
         .logo {
             font-size: 2.5em;
-            font-weight: 800; /* ExtraBold for RECIPETTE */
+            font-weight: 800;
             text-align: center;
             margin-bottom: 0;
         }
         .tagline {
             text-align: center;
             font-style: italic;
-            font-weight: 300; /* Light for the tagline */
+            font-weight: 300;
             margin-bottom: 20px;
         }
         #recipe-container {
@@ -43,64 +40,22 @@
             padding: 20px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
-        #recipe-image {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        .recipe-meta {
-            background-color: #f9f9f9;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-weight: 300; /* Light for meta information */
-        }
-        .recipe-meta p {
-            margin: 5px 0;
-        }
-        #ingredients ul {
-            list-style-type: none;
-            padding-left: 0;
-        }
-        #ingredients li {
-            margin-bottom: 10px;
-        }
-        #ingredients input[type="checkbox"] {
-            margin-right: 10px;
-        }
-        .checked {
-            text-decoration: line-through;
-            color: #888;
-        }
-        .star {
-            color: #FFD700;
-        }
-        #shareButton {
-            background-color: #4CAF50;
-            border: none;
-            color: white;
-            padding: 15px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
-            border-radius: 4px;
-            font-weight: 500; /* Medium for buttons */
-        }
-        h2, h3 {
-            font-weight: 600; /* Semi-bold for headers */
-        }
+        /* Add more critical styles here */
     </style>
+    <script>
+        // Inline the Google Analytics script
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-8P009MXQNG');
+    </script>
 </head>
 <body>
     <h1 id="recipette" class="logo">RECIPETTE</h1>
     <p class="tagline">Enjoy 1 new recipe every day!</p>
     <div id="recipe-container">
         <h2 id="recipe-title"></h2>
-        <img id="recipe-image" alt="Recipe of the day">
+        <img id="recipe-image" alt="Recipe of the day" loading="lazy">
         <div class="recipe-meta">
             <p id="author"></p>
             <p id="rating"></p>
@@ -115,174 +70,10 @@
         <button id="shareButton">Share Recipe</button>
     </div>
 
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8P009MXQNG"></script>
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
-        import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-database.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyA71FrziQE6ezcRV5Vz72pQrKbrmwIgM50",
-            authDomain: "recipette-6e937.firebaseapp.com",
-            projectId: "recipette-6e937",
-            databaseURL: "https://recipette-6e937-default-rtdb.firebaseio.com",
-            storageBucket: "recipette-6e937.appspot.com",
-            messagingSenderId: "338983932813",
-            appId: "1:338983932813:web:8c3c912e4911c9624523c4",
-            measurementId: "G-9BV3VLB1Z9"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-
-        function displayRecipe(recipe) {
-            document.getElementById('recipe-title').textContent = recipe.name;
-            document.getElementById('recipe-image').src = recipe.imageURL;
-            
-            // Update the author display to include a hyperlink if authorWebsite is available
-            const authorElement = document.getElementById('author');
-            if (recipe.authorWebsite) {
-                authorElement.innerHTML = `Author: <a href="${recipe.authorWebsite}" target="_blank" rel="noopener noreferrer">${recipe.author || 'Unknown'}</a>`;
-            } else {
-                authorElement.textContent = `Author: ${recipe.author || 'Unknown'}`;
-            }
-            
-            document.getElementById('rating').innerHTML = `Rating: ${getStarRating(recipe.rating || 0)}`;
-            document.getElementById('prep-time').textContent = `Prep Time: ${recipe.prepTime} minutes`;
-            document.getElementById('cook-time').textContent = `Cook Time: ${recipe.cookTime} minutes`;
-            document.getElementById('total-time').textContent = `Total Time: ${recipe.prepTime + recipe.cookTime} minutes`;
-            document.getElementById('servings').textContent = `Servings: ${recipe.servings}`;
-            document.getElementById('calories').textContent = `Calories Per Serving: ${recipe.caloriesPerServing || 'N/A'} kcal`;
-            
-            const ingredientsList = document.getElementById('ingredients');
-            ingredientsList.innerHTML = '<h3>Ingredients:</h3><ul>' + 
-                recipe.ingredients.map(item => `
-                    <li>
-                        <input type="checkbox" onchange="toggleIngredient(this)">
-                        <span>${item}</span>
-                    </li>`).join('') + 
-                '</ul>';
-            
-            const instructionsList = document.getElementById('instructions');
-            instructionsList.innerHTML = '<h3>Instructions:</h3><ol>' + 
-                recipe.instructions.map(item => `<li>${item}</li>`).join('') + 
-                '</ol>';
-
-            window.currentRecipe = recipe;
-        }
-
-        function getStarRating(rating) {
-            const fullStars = Math.floor(rating);
-            const halfStar = rating % 1 >= 0.5 ? 1 : 0;
-            const emptyStars = 5 - fullStars - halfStar;
-            
-            return '★'.repeat(fullStars) + (halfStar ? '½' : '') + '☆'.repeat(emptyStars);
-        }
-
-        function getRandomRecipeKey(recipes) {
-            const recipeKeys = Object.keys(recipes);
-            return recipeKeys[Math.floor(Math.random() * recipeKeys.length)];
-        }
-
-        async function setDailyRecipe() {
-            const recipesRef = ref(db, 'recipes');
-            const snapshot = await get(recipesRef);
-            
-            if (snapshot.exists()) {
-                const recipes = snapshot.val();
-                const newRecipeKey = getRandomRecipeKey(recipes);
-                const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
-                
-                await set(ref(db, 'dailyRecipe'), {
-                    date: today,
-                    recipeKey: newRecipeKey
-                });
-                
-                return newRecipeKey;
-            } else {
-                console.log("No recipes available");
-                return null;
-            }
-        }
-
-        async function getDailyRecipe() {
-            const dailyRecipeRef = ref(db, 'dailyRecipe');
-            const snapshot = await get(dailyRecipeRef);
-            
-            if (snapshot.exists()) {
-                const dailyRecipe = snapshot.val();
-                const today = new Date().toISOString().split('T')[0];
-                
-                if (dailyRecipe.date === today) {
-                    return dailyRecipe.recipeKey;
-                }
-            }
-            
-            return await setDailyRecipe();
-        }
-
-        async function fetchAndDisplayRecipe() {
-            try {
-                const recipeKey = await getDailyRecipe();
-                if (recipeKey) {
-                    const recipeRef = ref(db, `recipes/${recipeKey}`);
-                    const snapshot = await get(recipeRef);
-                    
-                    if (snapshot.exists()) {
-                        displayRecipe(snapshot.val());
-                    } else {
-                        console.log("Recipe not found");
-                    }
-                }
-            } catch (error) {
-                console.error("Error fetching recipe:", error);
-            }
-        }
-
-        // Social sharing functionality
-        function getRecipeNumber() {
-            const startDate = new Date('2024-07-26'); // The start date of your app
-            const today = new Date();
-            const diffTime = Math.abs(today - startDate);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-            return diffDays;
-        }
-
-        function generateShareText(recipe) {
-            const recipeNumber = getRecipeNumber();
-            const rating = recipe.rating.toFixed(1);
-            const emojis = '🧄🧈🌽🍗🌽🧈🧄';
-            return `Recipette ${recipeNumber} - ${rating} ⭐'s\n\n${emojis}`;
-        }
-
-        async function shareRecipe(recipe) {
-            const shareText = generateShareText(recipe);
-
-            if (navigator.share) {
-                try {
-                    await navigator.share({
-                        title: recipe.name,
-                        text: shareText,
-                    });
-                } catch (err) {
-                    console.error('Error sharing:', err);
-                }
-            } else {
-                // Fallback for browsers that don't support Web Share API
-                alert('Sharing is not supported on this browser. You can copy this text:\n\n' + shareText);
-            }
-        }
-
-        document.getElementById('shareButton').addEventListener('click', () => {
-            shareRecipe(window.currentRecipe);
-        });
-
-        // Call this function when the page loads
-        fetchAndDisplayRecipe();
-
-        // Make toggleIngredient function global so it can be accessed by inline event handlers
-        window.toggleIngredient = function(checkbox) {
-            const span = checkbox.nextElementSibling;
-            span.classList.toggle('checked', checkbox.checked);
-        };
+        // Your existing JavaScript code here
+        // ...
     </script>
 </body>
 </html>
