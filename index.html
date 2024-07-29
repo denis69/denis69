@@ -62,29 +62,85 @@
             margin-bottom: 20px;
             font-weight: 300;
         }
-        /* Add more critical styles here if needed */
+        /* Splash page styles */
+        #splash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background-color: #ffffff;
+            z-index: 1000;
+        }
+        .splash-logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 10px;
+        }
+        .button-container {
+            display: flex;
+            gap: 10px;
+        }
+        .splash-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: 1px solid #000;
+            background-color: #fff;
+            border-radius: 20px;
+        }
+        #cookButton {
+            background-color: #000;
+            color: #fff;
+        }
     </style>
     <!-- Move non-critical styles to an external stylesheet -->
     <link rel="stylesheet" href="styles.css" media="print" onload="this.media='all'">
 </head>
 <body>
-    <h1 id="recipette" class="logo">RECIPETTE</h1>
-    <p class="tagline">Enjoy 1 new recipe every day!</p>
-    <div id="recipe-container">
-        <h2 id="recipe-title"></h2>
-        <img id="recipe-image" alt="Recipe of the day" loading="lazy">
-        <div class="recipe-meta">
-            <p id="author"></p>
-            <p id="rating"></p>
-            <p id="prep-time"></p>
-            <p id="cook-time"></p>
-            <p id="total-time"></p>
-            <p id="servings"></p>
-            <p id="calories"></p>
+    <!-- Splash page -->
+    <div id="splash">
+        <svg class="splash-logo" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 7C3 5.89543 3.89543 5 5 5H19C20.1046 5 21 5.89543 21 7V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V7Z" stroke="black" stroke-width="2"/>
+            <path d="M3 7H21" stroke="black" stroke-width="2"/>
+            <path d="M8 3V7" stroke="black" stroke-width="2"/>
+            <path d="M16 3V7" stroke="black" stroke-width="2"/>
+            <rect x="6" y="10" width="4" height="4" rx="0.5" fill="black"/>
+            <rect x="14" y="10" width="4" height="4" rx="0.5" fill="black"/>
+        </svg>
+        <h1 class="logo">RECIPETTE</h1>
+        <p class="tagline">Enjoy 1 new recipe every day!</p>
+        <div class="button-container">
+            <button class="splash-button" onclick="alert('Subscribe functionality coming soon!')">Subscribe</button>
+            <button class="splash-button" onclick="alert('Login functionality coming soon!')">Log in</button>
+            <button id="cookButton" class="splash-button" onclick="hideSplash()">Cook</button>
         </div>
-        <div id="ingredients"></div>
-        <div id="instructions"></div>
-        <button id="shareButton">Share Recipe</button>
+    </div>
+
+    <!-- Main content (initially hidden) -->
+    <div id="main-content" style="display: none;">
+        <h1 id="recipette" class="logo">RECIPETTE</h1>
+        <p class="tagline">Enjoy 1 new recipe every day!</p>
+        <div id="recipe-container">
+            <h2 id="recipe-title"></h2>
+            <img id="recipe-image" alt="Recipe of the day" loading="lazy">
+            <div class="recipe-meta">
+                <p id="author"></p>
+                <p id="rating"></p>
+                <p id="prep-time"></p>
+                <p id="cook-time"></p>
+                <p id="total-time"></p>
+                <p id="servings"></p>
+                <p id="calories"></p>
+            </div>
+            <div id="ingredients"></div>
+            <div id="instructions"></div>
+            <button id="shareButton">Share Recipe</button>
+        </div>
     </div>
 
     <!-- Load Google Analytics script asynchronously -->
@@ -252,6 +308,12 @@
         window.toggleIngredient = function(checkbox) {
             const span = checkbox.nextElementSibling;
             span.classList.toggle('checked', checkbox.checked);
+        };
+
+        // Splash page function
+        window.hideSplash = function() {
+            document.getElementById('splash').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
         };
     </script>
 </body>
