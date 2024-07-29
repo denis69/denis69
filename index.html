@@ -62,7 +62,7 @@
             margin-bottom: 20px;
             font-weight: 300;
         }
-        /* Splash page styles */
+        /* Updated splash page styles */
         #splash {
             position: fixed;
             top: 0;
@@ -75,6 +75,7 @@
             flex-direction: column;
             background-color: #ffffff;
             z-index: 1000;
+            font-family: 'Figtree', sans-serif;
         }
         .splash-logo {
             width: 80px;
@@ -83,19 +84,32 @@
         }
         .button-container {
             display: flex;
-            gap: 10px;
+            gap: 15px;
+            margin-top: 20px;
         }
         .splash-button {
-            padding: 10px 20px;
+            width: 120px;
+            padding: 12px 0;
             font-size: 16px;
             cursor: pointer;
             border: 1px solid #000;
             background-color: #fff;
             border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.3s, color 0.3s;
+            font-family: 'Figtree', sans-serif;
         }
         #cookButton {
             background-color: #000;
             color: #fff;
+        }
+        .splash-button:hover {
+            background-color: #f0f0f0;
+        }
+        #cookButton:hover {
+            background-color: #333;
         }
     </style>
     <!-- Move non-critical styles to an external stylesheet -->
