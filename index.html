@@ -76,19 +76,33 @@
             background-color: #ffffff;
             z-index: 1000;
             font-family: 'Figtree', sans-serif;
+            padding: 20px;
+            box-sizing: border-box;
         }
-        .splash-logo {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 10px;
+        #splash .splash-logo {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 20px;
         }
-        .button-container {
+        #splash .logo {
+            font-size: 2em !important;
+            margin-bottom: 10px !important;
+        }
+        #splash .tagline {
+            font-size: 1em !important;
+            margin-bottom: 30px !important;
+        }
+        #splash .button-container {
             display: flex;
-            gap: 15px;
-            margin-top: 20px;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            max-width: 300px;
         }
-        .splash-button {
-            width: 120px;
+        #splash .splash-button {
+            flex: 1;
             padding: 12px 0;
             font-size: 16px;
             cursor: pointer;
@@ -99,17 +113,29 @@
             justify-content: center;
             align-items: center;
             transition: background-color 0.3s, color 0.3s;
-            font-family: 'Figtree', sans-serif;
+            white-space: nowrap;
+            min-width: 80px;
         }
-        #cookButton {
+        #splash #cookButton {
             background-color: #000;
             color: #fff;
         }
-        .splash-button:hover {
+        #splash .splash-button:hover {
             background-color: #f0f0f0;
         }
-        #cookButton:hover {
+        #splash #cookButton:hover {
             background-color: #333;
+        }
+
+        /* Media query for smaller screens */
+        @media (max-width: 380px) {
+            #splash .button-container {
+                flex-direction: column;
+                max-width: 200px;
+            }
+            #splash .splash-button {
+                width: 100%;
+            }
         }
     </style>
     <!-- Move non-critical styles to an external stylesheet -->
@@ -331,4 +357,4 @@
         };
     </script>
 </body>
-</html>
+</html
