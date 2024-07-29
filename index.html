@@ -362,9 +362,7 @@
         async function shareRecipe(recipe) {
             const shareText = generateShareText(recipe);
 
-            if (navigator.share) {
-                try {
-                    await navigator.share({
+            if (navigator.share({
                         title: recipe.name,
                         text: shareText,
                     });
