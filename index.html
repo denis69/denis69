@@ -102,8 +102,9 @@
 
         async function shareRecipe(recipe) {
             const websiteUrl = 'https://recipette.com'; // Replace with your actual website URL
-            const shareText = `Check out this recipe for ${recipe.name} on Recipette!`;
-            const shareUrl = `${websiteUrl}?recipe=${encodeURIComponent(recipe.name)}`;
+            const recipeNumber = Math.ceil(Math.abs(new Date() - new Date('2024-07-27')) / (1000 * 60 * 60 * 24));
+            const emojis = '🍞🔥🍖🧀🍯🇪🇸🤤'; // Your string of emojis
+            const shareText = `Check out today's Recipette!\n${emojis}\n${websiteUrl}`;
 
             if (navigator.share) {
                 try {
@@ -112,9 +113,9 @@
                     const imageFile = new File([imageBlob], 'recipe-image.jpg', { type: 'image/jpeg' });
 
                     await navigator.share({
-                        title: recipe.name,
+                        title: `Recipette ${recipeNumber}: ${recipe.name}`,
                         text: shareText,
-                        url: shareUrl,
+                        url: websiteUrl,
                         files: [imageFile]
                     });
                 } catch (err) {
@@ -126,7 +127,7 @@
             }
 
             function fallbackShare() {
-                const fallbackText = `${shareText}\n\nRecipe: ${recipe.name}\nView it here: ${shareUrl}\n\nImage: ${recipe.imageURL}`;
+                const fallbackText = `${shareText}\n\nRecipe: ${recipe.name}\nImage: ${recipe.imageURL}`;
                 alert('Sharing is not fully supported on this browser. You can copy this text to share:\n\n' + fallbackText);
             }
         }
