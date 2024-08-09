@@ -101,36 +101,36 @@
         }
 
         async function shareRecipe(recipe) {
-            const websiteUrl = 'https://recipette.com'; // Replace with your actual website URL
-            const recipeNumber = Math.ceil(Math.abs(new Date() - new Date('2024-07-27')) / (1000 * 60 * 60 * 24));
-            const emojis = '🍞🔥🍖🧀🍯🇪🇸🤤'; // Your string of emojis
-            const shareText = `Check out today's Recipette!\n${emojis}\n${websiteUrl}`;
+    const websiteUrl = 'https://recipette.com'; // Replace with your actual website URL
+    const recipeNumber = Math.ceil(Math.abs(new Date() - new Date('2024-07-27')) / (1000 * 60 * 60 * 24));
+    const emojis = '🍞🔥🍖🧀🍯🇪🇸🤤'; // Your string of emojis
+    const shareText = `Check out today's Recipette!\n${emojis}`;
 
-            if (navigator.share) {
-                try {
-                    const imageResponse = await fetch(recipe.imageURL);
-                    const imageBlob = await imageResponse.blob();
-                    const imageFile = new File([imageBlob], 'recipe-image.jpg', { type: 'image/jpeg' });
+    if (navigator.share) {
+        try {
+            const imageResponse = await fetch(recipe.imageURL);
+            const imageBlob = await imageResponse.blob();
+            const imageFile = new File([imageBlob], 'recipe-image.jpg', { type: 'image/jpeg' });
 
-                    await navigator.share({
-                        title: `Recipette ${recipeNumber}: ${recipe.name}`,
-                        text: shareText,
-                        url: websiteUrl,
-                        files: [imageFile]
-                    });
-                } catch (err) {
-                    console.error('Error sharing:', err);
-                    fallbackShare();
-                }
-            } else {
-                fallbackShare();
-            }
-
-            function fallbackShare() {
-                const fallbackText = `${shareText}\n\nRecipe: ${recipe.name}\nImage: ${recipe.imageURL}`;
-                alert('Sharing is not fully supported on this browser. You can copy this text to share:\n\n' + fallbackText);
-            }
+            await navigator.share({
+                title: `Recipette ${recipeNumber}: ${recipe.name}`,
+                text: shareText,
+                url: websiteUrl,
+                files: [imageFile]
+            });
+        } catch (err) {
+            console.error('Error sharing:', err);
+            fallbackShare();
         }
+    } else {
+        fallbackShare();
+    }
+
+    function fallbackShare() {
+        const fallbackText = `${shareText}\n${websiteUrl}\n\nRecipe: ${recipe.name}\nImage: ${recipe.imageURL}`;
+        alert('Sharing is not fully supported on this browser. You can copy this text to share:\n\n' + fallbackText);
+    }
+}
 
         window.toggleIngredient = checkbox => checkbox.nextElementSibling.classList.toggle('checked', checkbox.checked);
 
