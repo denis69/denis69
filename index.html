@@ -101,11 +101,34 @@
         }
 
         async function shareRecipe(recipe) {
-            const shareText = `Recipette ${Math.ceil(Math.abs(new Date() - new Date('2024-07-27')) / (1000 * 60 * 60 * 24))} - ${recipe.rating.toFixed(1)} ⭐'s\n\n🍞🔥🍖🧀🍯🇪🇸🤤`;
+            const websiteUrl = 'https://recipette.com'; // Replace with your actual website URL
+            const shareText = `Check out this recipe for ${recipe.name} on Recipette!`;
+            const shareUrl = `${websiteUrl}?recipe=${encodeURIComponent(recipe.name)}`;
+
             if (navigator.share) {
-                try { await navigator.share({ title: recipe.name, text: shareText }); }
-                catch (err) { console.error('Error sharing:', err); }
-            } else alert('Sharing is not supported on this browser. You can copy this text:\n\n' + shareText);
+                try {
+                    const imageResponse = await fetch(recipe.imageURL);
+                    const imageBlob = await imageResponse.blob();
+                    const imageFile = new File([imageBlob], 'recipe-image.jpg', { type: 'image/jpeg' });
+
+                    await navigator.share({
+                        title: recipe.name,
+                        text: shareText,
+                        url: shareUrl,
+                        files: [imageFile]
+                    });
+                } catch (err) {
+                    console.error('Error sharing:', err);
+                    fallbackShare();
+                }
+            } else {
+                fallbackShare();
+            }
+
+            function fallbackShare() {
+                const fallbackText = `${shareText}\n\nRecipe: ${recipe.name}\nView it here: ${shareUrl}\n\nImage: ${recipe.imageURL}`;
+                alert('Sharing is not fully supported on this browser. You can copy this text to share:\n\n' + fallbackText);
+            }
         }
 
         window.toggleIngredient = checkbox => checkbox.nextElementSibling.classList.toggle('checked', checkbox.checked);
