@@ -23,10 +23,6 @@
         <p class="tagline">Enjoy 1 new recipe every day!</p>
         <div class="button-container">
             <button id="emailLoginButton" class="splash-button">Continue with Email</button>
-            <button id="googleLoginButton" class="splash-button">
-                <img src="google-icon.png" alt="Google" style="width:20px;margin-right:10px;">
-                Continue with Google
-            </button>
             <button id="cookButton" class="splash-button">Continue as Guest</button>
         </div>
     </div>
@@ -53,7 +49,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
         import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-database.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
 
         const app = initializeApp({apiKey:"AIzaSyA71FrziQE6ezcRV5Vz72pQrKbrmwIgM50",authDomain:"recipette-6e937.firebaseapp.com",projectId:"recipette-6e937",databaseURL:"https://recipette-6e937-default-rtdb.firebaseio.com",storageBucket:"recipette-6e937.appspot.com",messagingSenderId:"338983932813",appId:"1:338983932813:web:8c3c912e4911c9624523c4",measurementId:"G-9BV3VLB1Z9"});
         const db = getDatabase(app), auth = getAuth(app);
@@ -119,16 +115,6 @@
             } else alert('Sharing is not supported on this browser. You can copy this text:\n\n' + shareText);
         }
 
-        function handleLogin(provider) {
-            signInWithPopup(auth, provider).then(result => {
-                console.log("User logged in:", result.user);
-                hideSplash();
-            }).catch(error => {
-                console.error("Login error:", error);
-                alert("Login failed. Please try again.");
-            });
-        }
-
         function showEmailLogin() {
             const splashContent = document.getElementById('splash').innerHTML;
             document.getElementById('splash').innerHTML = `
@@ -172,7 +158,6 @@
         }
 
         function addLoginEventListeners() {
-            document.getElementById('googleLoginButton').addEventListener('click', () => handleLogin(new GoogleAuthProvider()));
             document.getElementById('emailLoginButton').addEventListener('click', showEmailLogin);
         }
 
@@ -188,8 +173,19 @@
         document.getElementById('shareButton').addEventListener('click', () => shareRecipe(currentRecipe));
         document.getElementById('cookButton').addEventListener('click', hideSplash);
 
-        auth.onAuthStateChanged(user => {
-            console.log(user ? "User is signed in:" : "No user is signed in.", user);
+        // Set persistence to local to keep the user logged in
+        setPersistence(auth, browserLocalPersistence).then(() => {
+            onAuthStateChanged(auth, user => {
+                if (user) {
+                    console.log("User is signed in:", user);
+                    hideSplash();
+                } else {
+                    console.log("No user is signed in.");
+                    document.getElementById('splash').style.display = 'flex';
+                }
+            });
+        }).catch((error) => {
+            console.error("Error setting persistence:", error);
         });
 
         addLoginEventListeners();
