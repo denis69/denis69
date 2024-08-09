@@ -482,9 +482,11 @@ function addLoginEventListeners() {
             const span = checkbox.nextElementSibling;
             span.classList.toggle('checked', checkbox.checked);
         };
-
+        handleAuthStateChange();
+        addLoginEventListeners();
         // Fetch the recipe when the page loads
         fetchRecipe();
+        
     </script>
 </body>
 </html>
