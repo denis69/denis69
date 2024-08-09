@@ -255,7 +255,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
         const auth = getAuth(app);
-
+        
         let currentRecipe = null;
 
         function getStarRating(rating) {
@@ -382,22 +382,89 @@
         }
 
         async function shareRecipe(recipe) {
-            const shareText = generateShareText(recipe);
+    const shareText = generateShareText(recipe);
 
-            if (navigator.share) {
-                try {
-                    await navigator.share({
-                        title: recipe.name,
-                        text: shareText,
-                    });
-                } catch (err) {
-                    console.error('Error sharing:', err);
-                }
-            } else {
-                alert('Sharing is not supported on this browser. You can copy this text:\n\n' + shareText);
-            }
+    if (navigator.share) {
+        try {
+            await navigator.share({
+                title: recipe.name,
+                text: shareText,
+            });
+        } catch (err) {
+            console.error('Error sharing:', err);
         }
+    } else {
+        alert('Sharing is not supported on this browser. You can copy this text:\n\n' + shareText);
+    }
+}
 
+// Add the new authentication functions here
+
+function handleLogin(provider) {
+    signInWithPopup(auth, provider)
+        .then((result) => {
+            const user = result.user;
+            console.log("User logged in:", user);
+            hideSplash();
+        }).catch((error) => {
+            console.error("Login error:", error);
+            alert("Login failed. Please try again.");
+        });
+}
+
+function showEmailLogin() {
+    const splashContent = document.getElementById('splash').innerHTML;
+    document.getElementById('splash').innerHTML = `
+        <h2>Log in or create an account</h2>
+        <input type="email" id="emailInput" placeholder="Email Address" required>
+        <input type="password" id="passwordInput" placeholder="Password" required>
+        <button id="emailLoginButton" class="splash-button">Log In</button>
+        <button id="emailRegisterButton" class="splash-button">Register</button>
+        <button id="backButton" class="splash-button">Back</button>
+    `;
+    document.getElementById('emailLoginButton').addEventListener('click', handleEmailLogin);
+    document.getElementById('emailRegisterButton').addEventListener('click', handleEmailRegister);
+    document.getElementById('backButton').addEventListener('click', () => {
+        document.getElementById('splash').innerHTML = splashContent;
+        addLoginEventListeners();
+    });
+}
+
+function handleEmailLogin() {
+    const email = document.getElementById('emailInput').value;
+    const password = document.getElementById('passwordInput').value;
+    signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            const user = userCredential.user;
+            console.log("User logged in:", user);
+            hideSplash();
+        })
+        .catch((error) => {
+            console.error("Email login error:", error);
+            alert("Login failed. Please try again.");
+        });
+}
+
+function handleEmailRegister() {
+    const email = document.getElementById('emailInput').value;
+    const password = document.getElementById('passwordInput').value;
+    createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            const user = userCredential.user;
+            console.log("User registered:", user);
+            hideSplash();
+        })
+        .catch((error) => {
+            console.error("Registration error:", error);
+            alert("Registration failed. Please try again.");
+        });
+}
+
+function addLoginEventListeners() {
+    document.getElementById('googleLoginButton').addEventListener('click', () => handleLogin(new GoogleAuthProvider()));
+    document.getElementById('emailLoginButton').addEventListener('click', showEmailLogin);
+}
+        
         function hideSplash() {
             document.getElementById('splash').style.display = 'none';
             document.getElementById('main-content').style.display = 'block';
