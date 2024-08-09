@@ -6,53 +6,46 @@
     <title>RECIPETTE</title>
     <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;800&display=swap" rel="stylesheet">
     <style>
-        body{font-family:'Figtree',sans-serif;line-height:1.6;color:#333;max-width:800px;margin:0 auto;padding:20px;background-color:#f4f4f4}.logo{font-size:2.5em;font-weight:800;text-align:center;margin-bottom:0}.tagline{text-align:center;font-style:italic;font-weight:300;margin-bottom:20px}#recipe-container{background-color:#fff;border-radius:8px;padding:20px;box-shadow:0 0 10px rgba(0,0,0,.1)}#recipe-image{max-width:100%;height:auto;border-radius:8px;margin-bottom:20px}.recipe-meta{background-color:#f9f9f9;padding:15px;border-radius:8px;margin-bottom:20px;font-weight:300}#ingredients ul{list-style-type:none;padding-left:0}#ingredients li{margin-bottom:10px;display:flex;align-items:center}#ingredients input[type=checkbox]{margin-right:10px}#ingredients .checked{text-decoration:line-through;color:#888}#splash{position:fixed;top:0;left:0;width:100%;height:100%;display:flex;justify-content:center;align-items:center;flex-direction:column;background-color:#fff;z-index:1000;padding:20px;box-sizing:border-box}#splash .splash-logo{width:60px;height:60px;margin-bottom:20px}#splash .logo{font-size:2em!important;margin-bottom:10px!important}#splash .tagline{font-size:1em!important;margin-bottom:30px!important}#splash .button-container{display:flex;flex-direction:column;gap:10px;width:100%;max-width:300px}#splash .splash-button{width:100%;padding:12px 0;font-size:16px;cursor:pointer;border:1px solid #000;background-color:#fff;border-radius:20px;display:flex;justify-content:center;align-items:center;transition:background-color .3s,color .3s}#splash #cookButton{background-color:#000;color:#fff}#splash .splash-button:hover{background-color:#f0f0f0}#splash #cookButton:hover{background-color:#333}#shareButton{padding:12px 24px;font-size:16px;cursor:pointer;border:1px solid #000;background-color:#000;color:#fff;border-radius:20px;display:inline-flex;justify-content:center;align-items:center;transition:background-color .3s,color .3s;margin-top:20px}#shareButton:hover{background-color:#333}#emailInput,#passwordInput{width:100%;padding:12px;margin-bottom:10px;border:1px solid #000;border-radius:20px;font-size:16px}@media (max-width:380px){#splash .button-container{max-width:200px}#splash .splash-button{width:100%}}
+        body{font-family:'Figtree',sans-serif;line-height:1.6;color:#333;max-width:800px;margin:0 auto;padding:20px;background-color:#f4f4f4}
+        .logo{font-size:2.5em;font-weight:800;text-align:center;margin-bottom:0}
+        .tagline{text-align:center;font-style:italic;font-weight:300;margin-bottom:20px}
+        #recipe-container{background-color:#fff;border-radius:8px;padding:20px;box-shadow:0 0 10px rgba(0,0,0,.1)}
+        #recipe-image{max-width:100%;height:auto;border-radius:8px;margin-bottom:20px}
+        .recipe-meta{background-color:#f9f9f9;padding:15px;border-radius:8px;margin-bottom:20px;font-weight:300}
+        #ingredients ul{list-style-type:none;padding-left:0}
+        #ingredients li{margin-bottom:10px;display:flex;align-items:center}
+        #ingredients input[type=checkbox]{margin-right:10px}
+        #ingredients .checked{text-decoration:line-through;color:#888}
+        #shareButton{padding:12px 24px;font-size:16px;cursor:pointer;border:1px solid #000;background-color:#000;color:#fff;border-radius:20px;display:inline-flex;justify-content:center;align-items:center;transition:background-color .3s,color .3s;margin-top:20px}
+        #shareButton:hover{background-color:#333}
     </style>
 </head>
 <body>
-    <div id="splash">
-        <svg class="splash-logo" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M3 7C3 5.89543 3.89543 5 5 5H19C20.1046 5 21 5.89543 21 7V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V7Z" stroke="black" stroke-width="2"/>
-            <path d="M3 7H21" stroke="black" stroke-width="2"/>
-            <path d="M8 3V7" stroke="black" stroke-width="2"/>
-            <path d="M16 3V7" stroke="black" stroke-width="2"/>
-            <rect x="6" y="10" width="4" height="4" rx="0.5" fill="black"/>
-            <rect x="14" y="10" width="4" height="4" rx="0.5" fill="black"/>
-        </svg>
-        <h1 class="logo">RECIPETTE</h1>
-        <p class="tagline">Enjoy 1 new recipe every day!</p>
-        <div class="button-container">
-            <button id="emailLoginButton" class="splash-button">Continue with Email</button>
-            <button id="cookButton" class="splash-button">Continue as Guest</button>
+    <h1 class="logo">RECIPETTE</h1>
+    <p class="tagline">Enjoy 1 new recipe every day!</p>
+    <div id="recipe-container">
+        <h2 id="recipe-title"></h2>
+        <img id="recipe-image" alt="Recipe of the day" loading="lazy">
+        <div class="recipe-meta">
+            <p id="author"></p>
+            <p id="rating"></p>
+            <p id="prep-time"></p>
+            <p id="cook-time"></p>
+            <p id="total-time"></p>
+            <p id="servings"></p>
+            <p id="calories"></p>
         </div>
+        <div id="ingredients"></div>
+        <div id="instructions"></div>
+        <button id="shareButton">Share Recipe</button>
     </div>
-    <div id="main-content" style="display:none;">
-        <h1 id="recipette" class="logo">RECIPETTE</h1>
-        <p class="tagline">Enjoy 1 new recipe every day!</p>
-        <div id="recipe-container">
-            <h2 id="recipe-title"></h2>
-            <img id="recipe-image" alt="Recipe of the day" loading="lazy">
-            <div class="recipe-meta">
-                <p id="author"></p>
-                <p id="rating"></p>
-                <p id="prep-time"></p>
-                <p id="cook-time"></p>
-                <p id="total-time"></p>
-                <p id="servings"></p>
-                <p id="calories"></p>
-            </div>
-            <div id="ingredients"></div>
-            <div id="instructions"></div>
-            <button id="shareButton">Share Recipe</button>
-        </div>
-    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
         import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-database.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
 
         const app = initializeApp({apiKey:"AIzaSyA71FrziQE6ezcRV5Vz72pQrKbrmwIgM50",authDomain:"recipette-6e937.firebaseapp.com",projectId:"recipette-6e937",databaseURL:"https://recipette-6e937-default-rtdb.firebaseio.com",storageBucket:"recipette-6e937.appspot.com",messagingSenderId:"338983932813",appId:"1:338983932813:web:8c3c912e4911c9624523c4",measurementId:"G-9BV3VLB1Z9"});
-        const db = getDatabase(app), auth = getAuth(app);
+        const db = getDatabase(app);
         let currentRecipe = null;
 
         const getStarRating = rating => '★'.repeat(Math.floor(rating)) + (rating % 1 >= 0.5 ? '½' : '') + '☆'.repeat(5 - Math.floor(rating) - (rating % 1 >= 0.5 ? 1 : 0));
@@ -115,80 +108,10 @@
             } else alert('Sharing is not supported on this browser. You can copy this text:\n\n' + shareText);
         }
 
-        function showEmailLogin() {
-            const splashContent = document.getElementById('splash').innerHTML;
-            document.getElementById('splash').innerHTML = `
-                <h2>Log in or create an account</h2>
-                <input type="email" id="emailInput" placeholder="Email Address" required>
-                <input type="password" id="passwordInput" placeholder="Password" required>
-                <button id="emailLoginButton" class="splash-button">Log In</button>
-                <button id="emailRegisterButton" class="splash-button">Register</button>
-                <button id="backButton" class="splash-button">Back</button>
-            `;
-            document.getElementById('emailLoginButton').addEventListener('click', handleEmailLogin);
-            document.getElementById('emailRegisterButton').addEventListener('click', handleEmailRegister);
-            document.getElementById('backButton').addEventListener('click', () => {
-                document.getElementById('splash').innerHTML = splashContent;
-                addLoginEventListeners();
-            });
-        }
-
-        function handleEmailLogin() {
-            const email = document.getElementById('emailInput').value;
-            const password = document.getElementById('passwordInput').value;
-            signInWithEmailAndPassword(auth, email, password).then(userCredential => {
-                console.log("User logged in:", userCredential.user);
-                hideSplash();
-            }).catch(error => {
-                console.error("Email login error:", error);
-                alert("Login failed. Please try again.");
-            });
-        }
-
-        function handleEmailRegister() {
-            const email = document.getElementById('emailInput').value;
-            const password = document.getElementById('passwordInput').value;
-            createUserWithEmailAndPassword(auth, email, password).then(userCredential => {
-                console.log("User registered:", userCredential.user);
-                hideSplash();
-            }).catch(error => {
-                console.error("Registration error:", error);
-                alert("Registration failed. Please try again.");
-            });
-        }
-
-        function addLoginEventListeners() {
-            document.getElementById('emailLoginButton').addEventListener('click', showEmailLogin);
-        }
-
-        function hideSplash() {
-            document.getElementById('splash').style.display = 'none';
-            document.getElementById('main-content').style.display = 'block';
-            if (!currentRecipe) fetchRecipe();
-        }
-
-        window.hideSplash = hideSplash;
         window.toggleIngredient = checkbox => checkbox.nextElementSibling.classList.toggle('checked', checkbox.checked);
 
         document.getElementById('shareButton').addEventListener('click', () => shareRecipe(currentRecipe));
-        document.getElementById('cookButton').addEventListener('click', hideSplash);
 
-        // Set persistence to local to keep the user logged in
-        setPersistence(auth, browserLocalPersistence).then(() => {
-            onAuthStateChanged(auth, user => {
-                if (user) {
-                    console.log("User is signed in:", user);
-                    hideSplash();
-                } else {
-                    console.log("No user is signed in.");
-                    document.getElementById('splash').style.display = 'flex';
-                }
-            });
-        }).catch((error) => {
-            console.error("Error setting persistence:", error);
-        });
-
-        addLoginEventListeners();
         fetchRecipe();
     </script>
 </body>
