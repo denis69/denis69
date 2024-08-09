@@ -207,14 +207,6 @@
                 <img src="google-icon.png" alt="Google" style="width: 20px; margin-right: 10px;">
                 Continue with Google
             </button>
-            <button id="facebookLoginButton" class="splash-button">
-                <img src="facebook-icon.png" alt="Facebook" style="width: 20px; margin-right: 10px;">
-                Continue with Facebook
-            </button>
-            <button id="appleLoginButton" class="splash-button">
-                <img src="apple-icon.png" alt="Apple" style="width: 20px; margin-right: 10px;">
-                Continue with Apple
-            </button>
             <button id="cookButton" class="splash-button" onclick="hideSplash()">Continue as Guest</button>
         </div>
     </div>
@@ -247,7 +239,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
         import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-database.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider, OAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyA71FrziQE6ezcRV5Vz72pQrKbrmwIgM50",
