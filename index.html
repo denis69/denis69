@@ -111,7 +111,7 @@
         }
         #splash .button-container {
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             gap: 10px;
@@ -119,7 +119,7 @@
             max-width: 300px;
         }
         #splash .splash-button {
-            flex: 1;
+            width: 100%;
             padding: 12px 0;
             font-size: 16px;
             cursor: pointer;
@@ -174,6 +174,16 @@
         #shareButton:hover {
             background-color: #333;
         }
+
+        /* New styles for authentication inputs */
+        #emailInput, #passwordInput {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid #000;
+            border-radius: 20px;
+            font-size: 16px;
+        }
     </style>
     <!-- Move non-critical styles to an external stylesheet -->
     <link rel="stylesheet" href="styles.css" media="print" onload="this.media='all'">
@@ -192,9 +202,20 @@
         <h1 class="logo">RECIPETTE</h1>
         <p class="tagline">Enjoy 1 new recipe every day!</p>
         <div class="button-container">
-            <button class="splash-button" onclick="alert('Subscribe functionality coming soon!')">Subscribe</button>
-            <button class="splash-button" onclick="alert('Login functionality coming soon!')">Log in</button>
-            <button id="cookButton" class="splash-button" onclick="hideSplash()">Cook</button>
+            <button id="emailLoginButton" class="splash-button">Continue with Email</button>
+            <button id="googleLoginButton" class="splash-button">
+                <img src="google-icon.png" alt="Google" style="width: 20px; margin-right: 10px;">
+                Continue with Google
+            </button>
+            <button id="facebookLoginButton" class="splash-button">
+                <img src="facebook-icon.png" alt="Facebook" style="width: 20px; margin-right: 10px;">
+                Continue with Facebook
+            </button>
+            <button id="appleLoginButton" class="splash-button">
+                <img src="apple-icon.png" alt="Apple" style="width: 20px; margin-right: 10px;">
+                Continue with Apple
+            </button>
+            <button id="cookButton" class="splash-button" onclick="hideSplash()">Continue as Guest</button>
         </div>
     </div>
 
@@ -226,6 +247,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
         import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-database.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider, OAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyA71FrziQE6ezcRV5Vz72pQrKbrmwIgM50",
@@ -240,6 +262,7 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
+        const auth = getAuth(app);
 
         let currentRecipe = null;
 
